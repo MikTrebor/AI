@@ -1,11 +1,11 @@
 # Name: Robert Kim
 # Block: 4
 # Email: 2018rkim@tjhsst.edu
-#temp
+# changed
 
-import time
-import random
 import csv
+import time
+
 
 class NQueens:
     def __init__(self, state=None, choices=None, n=8, parent=None):
