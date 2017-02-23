@@ -1,0 +1,34 @@
+mQueens
+    -CSP Structure
+        -Variables = columns C1,...,C8
+        -Domain = rows [1,...,8]
+
+        If c2 = 6 -> Column 2 has a queen in Row 6
+        No two columns have the same value Ci != Cj
+        Do not need column constraint (one variable per column)
+        |Ci-Cj| != |i-j| -> diagonal conflict
+
+Data Structure
+    -State = list of n numbers (where queens are)
+        [Ci] = row i
+    -Choices = list of n sets (where queens can be)
+        Ci -> {1,2,...,8}
+
+    assign(var, val) #places a queen
+        Cvar = val
+        update choices (for all columns)
+    get_next_var()
+        return some unassign col
+    get_a_value(var)
+        return some val in Cvar.choices
+
+dfs_search()
+    fringe = [start]
+    while true
+        if fringe empty then fail
+        n = fringe.pop
+        if n.goaltest then return n
+        c = n.get_next_var
+        for rows in n.get_value(c)
+            assign new value
+            add to fringe

@@ -1,0 +1,44 @@
+import time
+import math
+import heapq
+from collections import deque
+import random
+
+
+class nQueens:
+    def __init__(self, state=None, choices=None, n=8, parent=None):
+	“”” creates an nQueens board where state is a list of n integers,
+	    one per column,
+	    and choices is a list of sets,
+	    n is the size
+	    parent is the state predecessor in a search
+	“””
+
+    def assign(self, var, value):
+	“”” updates the state by setting state[var] to value
+	    also propgates constraints and updates choices
+	“””
+
+    def goal_test(self):
+	“”” returns True iff state is the goal state “””
+
+    def get_next_unassigned_var(self):
+	“”” returns the index of a column that is unassigned and
+	    has valid choices available “””
+
+    def get_choices_for_var(self, var):
+	“”” returns choices[var], the list of available values
+             for variable var, possibly sorted “””
+
+    def __str__(self):
+	“”” returns a string representation of the object “””
+
+###---------------------------------------------------------------
+
+def dfs_search(board):
+	“”” sets board as the initial state and returns a
+	    board containing an nQueens solution
+	    or None if none exists
+	“””
+
+

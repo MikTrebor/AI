@@ -1,0 +1,42 @@
+def best_strategy(self, player):
+        
+        def strategy(player, board, best_move, still_running):
+            while still_running.value > 0 and best_move.value < 1000:
+                time.sleep(1)
+                move = self.ab(4)(player, board)
+                if is_legal(move, player, board):
+                    best_move.value = move
+
+                #return best_move.value;
+        return strategy
+
+
+def human(self):
+        def strategy(player, board, best_move, still_running):
+            while still_running.value > 0 and best_move.value < 1000:
+                print(self.read_board(board))
+                print(core.PLAYERS[player] + ", choose a number: ")
+                print("Legal moves: " + str(self.legal_moves(player, board)))
+                spot = int(input())
+                best_move.value = spot
+            #return spot
+
+        return strategy
+
+
+
+def best_strategy(self, board, player, best_move, still_running):
+        while still_running.value > 0 and best_move.value < 1000:
+            time.sleep(1)
+            best_move.value = self.ab(4)(player, board)
+
+
+def human(self):
+        def strategy(player, board):
+            print(self.read_board(board))
+            print(core.PLAYERS[player] + ", choose a number: ")
+            print("Legal moves: " + str(self.legal_moves(player, board)))
+            spot = int(input())
+            return spot
+
+        return strategy
