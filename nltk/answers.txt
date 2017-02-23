@@ -1,0 +1,31 @@
+#################################
+#                               #
+#     Robert Kim 4th Period     #
+#                               #
+#################################
+exercise7()
+"However" is not used to mean "nevertheless" as often as Strunk and White make it seem. In text 1, it is always in between commas or at the beginning of a sentence.
+
+exercise9()
+########
+#Text 1#
+########
+[('_____________', 2), ('abandonedly', 1), ('abandonment', 2), ('abbreviation', 1), ('abomination', 1), ('aboriginally', 1), ('aboriginalness', 1), ('aboundingly', 1), ('absorbingly', 1), ('abstraction', 1), ('accelerated', 1), ('accelerating', 2), ('accidentally', 4), ('accommodate', 2), ('accommodated', 1), ('accommodation', 1), ('accompanied', 6), ('accompanies', 1), ('accompaniments', 3), ('accompanying', 5), ('accomplished', 7), ('accomplishing', 1), ('accomplishment', 1), ('accordingly', 8), ('accountable', 1), ('accountants', 1), ('accumulated', 3), ('accumulating', 1), ('acknowledges', 1), ('acknowledging', 1), ('acquaintance', 2), ('acquaintances', 2), ('acquiescence', 1), ('adhesiveness', 1), ('admeasurement', 1), ('admeasurements', 2), ('administered', 1), ('administering', 1), ('admonishing', 1), ('admonitions', 1), ('adolescence', 1), ('advancement', 1), ('adventurous', 4), ('adventurously', 1), ('aesthetically', 1), ('affectionate', 4), ('affectionately', 1), ('affghanistan', 1), ('affirmative', 1), ('afflictions', 1), ('aforethought', 2), ('aggregation', 1), ('aggregations', 1), ('agonizingly', 2), ('albatrosses', 1), ('aldrovandus', 1), ('alleghanian', 1), ('alleghanies', 1), ('allegorical', 1), ('allurements', 1), ('alternately', 3), ('alternating', 4), ('ambergriese', 1), ('amphitheatrical', 1), ('amputations', 1), ('annihilated', 3), ('annihilating', 1), ('annihilation', 3), ('announcement', 4), ('anomalously', 2), ('antagonistic', 1), ('antediluvian', 3), ('antichronical', 2), ('anticipated', 2), ('anticipatingly', 2), ('anticipation', 2), ('anticipative', 1), ('antiquities', 2), ('appallingly', 1), ('appearances', 4), ('appellation', 3), ('appellations', 1), ('appellative', 2), ('application', 6), ('appointments', 1), ('apportioned', 1), ('appreciative', 1), ('apprehension', 5), ('apprehensions', 3), ('apprehensiveness', 4), ('approaching', 10), ('appropriate', 1), ('appropriated', 1), ('approvingly', 1), ('approximate', 1), ('archaeological', 1), ('archaeologists', 1), ('archangelic', 2), ('archangelical', 1), ('archbishopric', 1), ('archiepiscopacy', 1), ('archipelagoes', 6), ('architecture', 1), ('arrangement', 3), ('articulated', 3), ('artificially', 1), ('artificialness', 1), ('ascertained', 1), ('ascertaining', 1), ('ascriptions', 1), ('asphaltites', 1), ('aspirations', 1), ('associations', 5), ('astonishing', 2), ('astonishment', 6), ('astrological', 1), ('astronomers', 1), ('astronomical', 1), ('atheistical', 1), ('athwartships', 1), ('atmospheres', 1), ('atmospheric', 4), ('attentively', 5), ('attestation', 1), ('authenticated', 1), ('authoritative', 1), ('authoritatively', 1), ('authorities', 5), ('awkwardness', 2)]
+
+########
+#Text 2#
+########
+[('abridgement', 1), ('abstraction', 1), ('accidentally', 5), ('accommodate', 3), ('accommodating', 2), ('accommodation', 7), ('accommodations', 1), ('accompanied', 2), ('accomplished', 2), ('accomplishment', 2), ('accordingly', 3), ('accustomary', 3), ('acknowledge', 12), ('acknowledged', 12), ('acknowledging', 5), ('acknowledgment', 4), ('acknowledgments', 3), ('acquaintance', 64), ('acquaintances', 1), ('acquiescence', 2), ('acquisition', 3), ('administering', 1), ('advancement', 2), ('advantageous', 3), ('affectation', 3), ('affectionate', 22), ('affectionately', 2), ('affirmative', 1), ('afflictions', 1), ('aggrandizement', 1), ('aggravation', 1), ('alleviation', 1), ('alterations', 1), ('alternately', 2), ('alternative', 1), ('annihilation', 2), ('anticipated', 2), ('anticipating', 1), ('anticipation', 1), ('anticipations', 1), ('apologising', 3), ('appearances', 2), ('application', 4), ('appointment', 4), ('apprehended', 1), ('apprehension', 2), ('apprehensions', 4), ('apprehensive', 2), ('approaching', 3), ('approbation', 13), ('appropriate', 1), ('arrangement', 6), ('arrangements', 3), ('articulation', 1), ('artlessness', 1), ('ascertained', 2), ('assiduities', 2), ('associating', 1), ('astonishing', 4), ('astonishment', 18), ('attachments', 3), ('attentively', 3), ('attractions', 6), ('attributing', 2), ('auspiciously', 1), ('awkwardness', 1)]
+
+exercise12()
+distinct words = 123455
+percentage of words with more than one pronounciation: 7.688223902136282
+
+exercise15()
+
+exercise18()
+
+exercise23()
+
+exercise27()
+0.0
