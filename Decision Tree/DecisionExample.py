@@ -1,5 +1,8 @@
 import math
 
+def test():
+    print("hi")
+
 def entropy(freq_list):
     tot_sum= 0
     output = 0
