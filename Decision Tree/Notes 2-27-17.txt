@@ -1,3 +1,15 @@
 1: loop over all columns + pick best one (freq counts, entropy)
 2: extract (ds, col, val)
     returns new DS = {DS | col == val}
+
+---------------------------------------------------------------
+make_tree(DS, level):
+    best_col = best col in DS using entropy
+    print("---" * level, best, "?")
+    for val in best_col:
+        new_ds = extract(ds, best_col, valu)
+        if new_ds is ALL the same answer:
+            print("---" * level + ">", val, answer)
+        else:
+            print("---" * level + ">" + "...")
+            make_tree(new_ds, level+1)
