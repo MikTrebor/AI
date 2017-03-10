@@ -1,6 +1,6 @@
-import random
-import math
 import csv
+import math
+import random
 from random import shuffle
 
 CLASS_idx = 0 # index of the answer column after reading CSV file
@@ -77,6 +77,7 @@ def make_tree(ds, level, head):
     """ makes tree of Nodes, recursive
     """
     global node_count
+    node_count += 1
     initial_h = freq_entropy(freq_dist(ds))
     best = max((initial_h - parameter_entropy(ds, i), i) for i in range(CLASS_idx))
     p = best[1]
