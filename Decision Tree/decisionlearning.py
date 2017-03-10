@@ -171,7 +171,9 @@ DS, headers = get_data("house-votes-84.csv")
 head_list = {}
 print("len", "percent", "nodes")
 with open('output.csv', 'w', newline='') as csvfile:
-    spamwriter = csv.writer(csvfile, delimiter=' ', quotechar='|', quoting=csv.QUOTE_MINIMAL)
+    csvwriter = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
+    csvwriter.writerow(['Size of Training Set', 'Accuracy', 'Number of Internal Nodes'])
+
     for num in range(10, 201):
         node_count = 0
         num_correct = 0
@@ -183,7 +185,8 @@ with open('output.csv', 'w', newline='') as csvfile:
                 num_correct += 1
             else:
                 num_incorrect += 1
-        print(num, round(num_correct/(num_correct+num_incorrect), 3),node_count)
+        csvwriter.writerow([str(num), str(round(num_correct/(num_correct+num_incorrect)*100, 2)), str(node_count)])
+        print(num, round(num_correct/(num_correct+num_incorrect)*100, 2),node_count)
     # print("repid", test_reps[0])
     # print("votes", test_set[test_reps[0]])
     # print(correct_guess(test_reps[0], head_list[num]))
