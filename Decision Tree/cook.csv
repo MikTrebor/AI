@@ -1,0 +1,13 @@
+Label,Time,Fri,Spaghetti,Yesterday,Left Overs,Eat Out already,Hungry,Tired,EatOut?
+1,<5,Yes,Yes,Yes,Yes,None,Yes,Yes,GoOUT
+2,57,No,No,No,No,Few,No,No,EatIN
+3,>7,Yes,No,No,Yes,Lot,No,No,GoOUT
+4,<5,No,Yes,No,No,Lot,Yes,No,EatIN
+5,<5,Yes,No,Yes,Yes,Few,No,Yes,GoOUT
+6,>7,No,Yes,Yes,No,None,Yes,No,Order
+7,57,No,Yes,Yes,Yes,Lot,Yes,No,EatIN
+8,57,No,No,No,No,Few,No,Yes,GoOUT
+9,<5,Yes,No,No,Yes,Lot,Yes,No,Order
+10,>7,No,Yes,No,No,Few,Yes,Yes,GoOUT
+11,>7,No,No,Yes,Yes,Lot,No,No,EatIN
+12,>7,No,Yes,Yes,No,Few,Yes,Yes,EatIN

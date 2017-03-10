@@ -16,16 +16,19 @@
 
 import csv
 import math
+import copy
 
-def entropies(data):
+def entropies(data): #takes lists of lists with header no answers
     elist = []
-
     for i in range(0, len(data[0])):
         etemp = 0.0
         f = freq_list(data)[i]
         for freq in f.values():
-            etemp += (-freq/len(data)) * math.log(freq/len(data), 2)
-        elist.append(etemp)
+            ptemp = freq/len(data)
+            etemp += ptemp * math.log(ptemp,2)
+        elist.append(-etemp)
+    # print(freq_list(data)[0])
+    # print(elist)
     return elist
 
 def csv_to_list(filename):
@@ -34,33 +37,75 @@ def csv_to_list(filename):
         temp_list = list(reader)
     return temp_list
 
-def freq_list(data):
+def freq_list(data): #takes lists of lists without header+ answer
     flist = []
-    for i in range(0, len(data[0])):
-        freqs = {}
-        # Calculate the frequency of each of the values in the target attr
-        for record in data:
-            if (record[i] in freqs):
-                freqs[record[i]] += 1.0
-            else:
-                freqs[record[i]]  = 1.0
-        flist.append(freqs)
+    if len(data) > 0:
+        for i in range(0, len(data[0])):
+            freqs = {}
+            for val in data:
+                if (val[i] in freqs):
+                    freqs[val[i]] += 1
+                else:
+                    freqs[val[i]]  = 1
+            flist.append(freqs)
     return flist
 
-def best_info_gain(data):
-     return entropies(data).index(min(entropies(data)))
+def all_same(data): #takes list of lists with header with answers
+    if len(data)==1:
+        return False
+    dtemp = data[1][len(data[1])-1]
+    for d in data[1:]:
+        if (not(d[len(data[1])-1]==dtemp)):
+            return False
+    return True
+
+def extract(ds, col, val):#data set, col number, value search
+    # print("\nexttract " + val + " from col " + str(col))
+    # print(ds)
+    temp = []
+    for d in ds:
+        if d[col] == val:
+            temp.append(d)
+        d.pop(col)
+
+    # print("\n\nextracted " +str(temp) +"\n")
+    return temp
+
+def best_info_gain(data): #takes list of lists with answers + header
+    dtemp = []
+    for row in data:
+        dtemp.append(row[1:])
+    return entropies(dtemp).index(min(entropies(dtemp)))
+
+def make_tree(DS, level):
+    temp = copy.deepcopy(DS)
+    best_col_num = best_info_gain(DS)
+    best_col = temp[0][best_col_num]
+    print("---" * level, best_col, "?")
+    # print("best_col", best_col)
+    # print("slice" + str(freq_list(DS[1:])))
+    for val in freq_list(DS[1:])[best_col_num]:
+
+        # print("\n ds" + val)
+        # print(temp)
+        # print("\n original" + str(DS))
+        new_ds = extract(temp[1:], best_col_num, val)
+        header = temp[0]
+        header.pop(best_col_num)
+        new_ds.insert(0, header)
+        if all_same(new_ds):
+            print("---" * level + ">", val, "...", freq_list(new_ds[1:])[len(new_ds[1])-1])
+        else:
+            if len(new_ds)>1:
+                print("---" * level + ">", val, "...", freq_list(new_ds[1:])[len(new_ds[1])-1])
+            else:
+                make_tree(new_ds, level+1)
 
 def main():
     myList = csv_to_list("tennis_tree.csv")
-    cats = len(myList[0])-1
-    days = len(myList)-1
-    myList.pop(0)
-    for day in myList:
-        day.pop(0)
-
-    print(myList, cats, " ", days)
-    print(entropies(myList))
-    print("lowest" + (str(best_info_gain(myList))))
+    for d in myList:
+        d.pop(0)
+    make_tree(myList, 1)
 
 
 if __name__ == "__main__":
