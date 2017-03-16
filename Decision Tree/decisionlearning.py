@@ -12,12 +12,20 @@ def get_data(file):
             stores the index of the classification column
             in a global variable
         """
+        ds = {}
+        test = {}
         reader = csv.reader(csvfile)
         headers = next(reader)[1:]
-        ds = {row[0]: row[1:] for row in reader if "?" not in set(row)}
+        for row in reader:
+            if "?" not in set(row):
+                ds[row[0]] = row[1:]
+            elif "?" in set(row):
+                test[row[0]] = row[1:]
+        # ds = {row[0]: row[1:] for row in reader if "?" not in set(row)}
+        # test = {row[0]: row[1:] for row in reader if "?" in set(row)}
         csvfile.close()
     CLASS_idx = len(headers) - 1
-    return ds, headers
+    return ds, test, headers
 
 def rand_dataset(r,c):
     """ create a random binary dataset of size r x c
@@ -131,17 +139,28 @@ def run_trees(data, size):
     head = make_tree(data_set, 1, [0])
     return head, test_set
 
+def question_guess(repid, head):
+    guess_party(repid, head.yes) == guess_party(repid, head.no)
+    if guess_party(repid, head.yes) == guess_party(repid, head.no):
+        return guess_party(repid, head.yes)
+    else: #werent equal
+        if random.randint(0, 1) == 0:
+            return guess_party(repid, head.yes)
+        else:
+            return guess_party(repid, head.no)
+
 def guess_party(repid, head):
     """ guesses the party of representative at 'repid'
         based on decision tree with head 'head', recursive
     """
-    # print("head value", head.value)
     if head.value == "democrat" or head.value == "republican":
         return head.value
     else:
         # print("vote", test_set[repid][head.value-1])
         if test_set[repid][head.value-1] == 'y':
             return guess_party(repid, head.yes)
+        elif test_set[repid][head.value-1]== '?':
+            return question_guess(repid, head)
         else:
             return guess_party(repid, head.no)
 
@@ -149,7 +168,15 @@ def actual_party(repid):
     """ returns party of representative at 'repid'
         based on last column of data set
     """
+    # has_question = False
+    # for answer in test_set[repid]:
+    #     if answer == "?":
+    #         has_question = True
+
+    # if not has_question:
     return(test_set[repid][len(test_set[repid])-1])
+    # else:
+    #     return "question"
 
 def correct_guess(repid, head):
     """ returns true if decision tree at 'head' correctly
@@ -168,26 +195,37 @@ class Node:
         self.no = None
         self.yes = None
 
-DS, headers = get_data("house-votes-84.csv")
+DS, qs, headers = get_data("house-votes-84.csv")
 head_list = {}
 print("len", "percent", "nodes")
 with open('output.csv', 'w', newline='') as csvfile:
     csvwriter = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
     csvwriter.writerow(['Size of Training Set', 'Accuracy', 'Number of Internal Nodes'])
 
-    for num in range(10, 201):
-        node_count = 0
-        num_correct = 0
-        num_incorrect = 0
-        head_list[num], test_set = run_trees(DS, num)
-        test_reps = list(test_set.keys())
-        for rep in range(len(test_reps)):
-            if correct_guess(test_reps[rep], head_list[num]):
-                num_correct += 1
-            else:
-                num_incorrect += 1
-        csvwriter.writerow([str(num), str(round(num_correct/(num_correct+num_incorrect)*100, 2)), str(node_count)])
-        print(num, round(num_correct/(num_correct+num_incorrect)*100, 2),node_count)
+    for num in range(1, 21):
+        sum_percents = 0
+        sum_nodes = 0
+        length = num*10
+        for repeat in range(100):
+            node_count = 0
+            num_correct = 0
+            num_incorrect = 0
+            head_list[length], test_set = run_trees(DS, length)
+            test_set.update(qs)
+            # print(len(test_set), length, len(test_set) + length) #always equal 435
+            test_reps = list(test_set.keys())
+            for rep in range(len(test_reps)):
+                if correct_guess(test_reps[rep], head_list[length]):
+                    num_correct += 1
+                else:
+                    num_incorrect += 1
+
+            sum_percents += num_correct/(num_correct+num_incorrect)*100
+            sum_nodes += node_count
+        print(length, round(sum_percents/100, 2), sum_nodes/100)
+        csvwriter.writerow([str(length), str(round(sum_percents/100, 2)), str(sum_nodes/100)])
+
+
     # print("repid", test_reps[0])
     # print("votes", test_set[test_reps[0]])
     # print(correct_guess(test_reps[0], head_list[num]))
