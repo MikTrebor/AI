@@ -85,7 +85,6 @@ def make_tree(ds, level, head):
     """ makes tree of Nodes, recursive
     """
     global node_count
-    node_count += 1
     initial_h = freq_entropy(freq_dist(ds))
     best = max((initial_h - parameter_entropy(ds, i), i) for i in range(CLASS_idx))
     p = best[1]
@@ -102,8 +101,25 @@ def make_tree(ds, level, head):
                 head.yes = Node(list(freqs.keys())[0])
             if v == 'n':
                 head.no = Node(list(freqs.keys())[0])
+
+        elif freq_entropy(freqs) < .15: # low entropy
+            #chose value with higher freq and make that heads value
+            dfreq = freqs[list(freqs.keys())[0]]
+            rfreq = freqs[list(freqs.keys())[1]]
+            greater = ""
+            if dfreq > rfreq:
+                greater = list(freqs.keys())[0]
+            else:
+                greater = list(freqs.keys())[1]
+            # print(greater)
+            head.yes = Node(greater)
+            # print(list(freqs.keys())[0])
+            head.no = Node(greater)
+
+
         else: # more children
             node_count+=1
+
             ## print("---" * level + ">", headers[p], "=", v, "...", freqs)
             # print("---" * level + ">", v, freqs)
             if v == 'y':
@@ -194,6 +210,7 @@ class Node:
         self.value = value
         self.no = None
         self.yes = None
+        self.parent = None
 
 DS, qs, headers = get_data("house-votes-84.csv")
 head_list = {}
@@ -202,12 +219,12 @@ with open('output.csv', 'w', newline='') as csvfile:
     csvwriter = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
     csvwriter.writerow(['Size of Training Set', 'Accuracy', 'Number of Internal Nodes'])
 
-    for num in range(1, 21):
+    for length in range(190, 201):
         sum_percents = 0
         sum_nodes = 0
-        length = num*10
+        # length = num*10
         for repeat in range(100):
-            node_count = 0
+            node_count = 1
             num_correct = 0
             num_incorrect = 0
             head_list[length], test_set = run_trees(DS, length)
