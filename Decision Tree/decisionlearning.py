@@ -102,9 +102,8 @@ def make_tree(ds, level, head):
             if v == 'n':
                 head.no = Node(list(freqs.keys())[0])
 
-        elif freq_entropy(freqs) < .200: # low entropy
+        elif freq_entropy(freqs) < .15: # low entropy
             #chose value with higher freq and make that heads value
-
             dfreq = freqs[list(freqs.keys())[0]]
             rfreq = freqs[list(freqs.keys())[1]]
             greater = ""
@@ -113,9 +112,9 @@ def make_tree(ds, level, head):
             else:
                 greater = list(freqs.keys())[1]
             # print(greater)
-            head.yes = Node(list(freqs.keys())[0])
+            head.yes = Node(greater)
             # print(list(freqs.keys())[0])
-            head.no = Node(list(freqs.keys())[0])
+            head.no = Node(greater)
 
 
         else: # more children
@@ -220,7 +219,7 @@ with open('output.csv', 'w', newline='') as csvfile:
     csvwriter = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
     csvwriter.writerow(['Size of Training Set', 'Accuracy', 'Number of Internal Nodes'])
 
-    for length in range(10, 201):
+    for length in range(190, 201):
         sum_percents = 0
         sum_nodes = 0
         # length = num*10
