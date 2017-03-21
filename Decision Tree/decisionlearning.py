@@ -102,7 +102,7 @@ def make_tree(ds, level, head):
             if v == 'n':
                 head.no = Node(list(freqs.keys())[0])
 
-        elif freq_entropy(freqs) < .250: # low entropy
+        elif freq_entropy(freqs) < .200: # low entropy
             #chose value with higher freq and make that heads value
 
             dfreq = freqs[list(freqs.keys())[0]]
