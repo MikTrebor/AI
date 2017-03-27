@@ -88,39 +88,39 @@ def make_tree(ds, level, head):
     initial_h = freq_entropy(freq_dist(ds))
     best = max((initial_h - parameter_entropy(ds, i), i) for i in range(CLASS_idx))
     p = best[1]
-    ## print("---" * level, headers[p], "(initial = %3.3f, gain=%3.3f)"%(initial_h, best[0]), "?")
+    print("---" * level, headers[p], "(initial = %3.3f, gain=%3.3f)"%(initial_h, best[0]), "?")
     head = Node(int(headers[p][1:]))
-    # print("---" * level, headers[p], "?")
+    #print("---" * level, headers[p], "?")
     for v in val_set(ds, p):
         new_ds = restrict(ds, p, v)
         freqs = freq_dist(new_ds)
         if freq_entropy(freqs) < 0.001: # leaf
-            ## print("---" * level + ">", headers[p], "=", v, freqs)
+            print("---" * level + ">", headers[p], "=", v, freqs)
             # print("---" * level + ">", v, freqs)
             if v == 'y':
                 head.yes = Node(list(freqs.keys())[0])
             if v == 'n':
                 head.no = Node(list(freqs.keys())[0])
-
-        elif freq_entropy(freqs) < .15: # low entropy
-            #chose value with higher freq and make that heads value
-            dfreq = freqs[list(freqs.keys())[0]]
-            rfreq = freqs[list(freqs.keys())[1]]
-            greater = ""
-            if dfreq > rfreq:
-                greater = list(freqs.keys())[0]
-            else:
-                greater = list(freqs.keys())[1]
-            # print(greater)
-            head.yes = Node(greater)
-            # print(list(freqs.keys())[0])
-            head.no = Node(greater)
-
+        ############################ PRUNING #############################
+        # elif freq_entropy(freqs) < .15: # low entropy
+        #     #chose value with higher freq and make that heads value
+        #     dfreq = freqs[list(freqs.keys())[0]]
+        #     rfreq = freqs[list(freqs.keys())[1]]
+        #     greater = ""
+        #     if dfreq > rfreq:
+        #         greater = list(freqs.keys())[0]
+        #     else:
+        #         greater = list(freqs.keys())[1]
+        #     # print(greater)
+        #     head.yes = Node(greater)
+        #     # print(list(freqs.keys())[0])
+        #     head.no = Node(greater)
+        ##################################################################
 
         else: # more children
             node_count+=1
 
-            ## print("---" * level + ">", headers[p], "=", v, "...", freqs)
+            print("---" * level + ">", headers[p], "=", v, "...", freqs)
             # print("---" * level + ">", v, freqs)
             if v == 'y':
                 head.yes = make_tree(new_ds, level + 1, head.yes)
@@ -212,18 +212,50 @@ class Node:
         self.yes = None
         self.parent = None
 
+def most_frequent(frequencies):
+        dfreq = frequencies[list(frequencies.keys())[0]]
+        rfreq = frequencies[list(frequencies.keys())[1]]
+        greater = ""
+        if dfreq > rfreq:
+            greater = list(frequencies.keys())[0]
+        else:
+            greater = list(frequencies.keys())[1]
+        return greater
+        #     head.yes = Node(greater)
+        #     # print(list(freqs.keys())[0])
+        #     head.no = Node(greater)
+
+
+
+def prune(freqs):
+    highest = most_frequent(freqs)
+    # change each node with best leaf, check accuracy and make change if within certain margin of error
+        ######## sets yes and no child both to most frequent key #########
+        #     #chose value with higher freq and make that heads value
+        #     dfreq = freqs[list(freqs.keys())[0]]
+        #     rfreq = freqs[list(freqs.keys())[1]]
+        #     greater = ""
+        #     if dfreq > rfreq:
+        #         greater = list(freqs.keys())[0]
+        #     else:
+        #         greater = list(freqs.keys())[1]
+        #     # print(greater)
+        #     head.yes = Node(greater)
+        #     # print(list(freqs.keys())[0])
+        #     head.no = Node(greater)
+        ##################################################################
 DS, qs, headers = get_data("house-votes-84.csv")
 head_list = {}
 print("len", "percent", "nodes")
-with open('output.csv', 'w', newline='') as csvfile:
+with open('unprunedoutput.csv', 'w', newline='') as csvfile:
     csvwriter = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
     csvwriter.writerow(['Size of Training Set', 'Accuracy', 'Number of Internal Nodes'])
 
-    for length in range(190, 201):
+    for length in range(10, 201):
         sum_percents = 0
         sum_nodes = 0
         # length = num*10
-        for repeat in range(100):
+        for repeat in range(1):
             node_count = 1
             num_correct = 0
             num_incorrect = 0
