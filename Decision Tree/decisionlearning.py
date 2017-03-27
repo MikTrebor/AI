@@ -5,22 +5,55 @@ from random import shuffle
 
 CLASS_idx = 0 # index of the answer column after reading CSV file
 node_count = 0
-def get_data(file):
+# def get_data(file):
+#     global CLASS_idx
+#     with open(file) as csvfile:
+#         """ Read data in from a csv file
+#             stores the index of the classification column
+#             in a global variable
+#         """
+#         ds = {}
+#         test = {}
+#         reader = csv.reader(csvfile)
+#         headers = next(reader)[1:]
+#         for row in reader:
+#             if "?" not in set(row):
+#                 ds[row[0]] = row[1:]
+#             elif "?" in set(row):
+#                 test[row[0]] = row[1:]
+#         # ds = {row[0]: row[1:] for row in reader if "?" not in set(row)}
+#         # test = {row[0]: row[1:] for row in reader if "?" in set(row)}
+#         csvfile.close()
+#     CLASS_idx = len(headers) - 1
+#     return ds, test, headers
+
+def get_data(train, test):
     global CLASS_idx
-    with open(file) as csvfile:
+
+    with open(train) as csvfile:
         """ Read data in from a csv file
             stores the index of the classification column
             in a global variable
         """
         ds = {}
+
+        reader = csv.reader(csvfile)
+        headers = next(reader)[1:]
+        for row in reader:
+            ds[row[0]] = row[1:]
+        # ds = {row[0]: row[1:] for row in reader if "?" not in set(row)}
+        # test = {row[0]: row[1:] for row in reader if "?" in set(row)}
+        csvfile.close()
+    with open(test) as csvfile:
+        """ Read data in from a csv file
+            stores the index of the classification column
+            in a global variable
+        """
         test = {}
         reader = csv.reader(csvfile)
         headers = next(reader)[1:]
         for row in reader:
-            if "?" not in set(row):
-                ds[row[0]] = row[1:]
-            elif "?" in set(row):
-                test[row[0]] = row[1:]
+             test[row[0]] = row[1:]
         # ds = {row[0]: row[1:] for row in reader if "?" not in set(row)}
         # test = {row[0]: row[1:] for row in reader if "?" in set(row)}
         csvfile.close()
@@ -244,35 +277,37 @@ def prune(freqs):
         #     # print(list(freqs.keys())[0])
         #     head.no = Node(greater)
         ##################################################################
-DS, qs, headers = get_data("house-votes-84.csv")
+# DS, qs, headers = get_data("house-votes-84.csv")
+DS, qs, headers = get_data("rd_train(1).csv", "rd_test(1).csv")
+
 head_list = {}
 print("len", "percent", "nodes")
 with open('unprunedoutput.csv', 'w', newline='') as csvfile:
     csvwriter = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
     csvwriter.writerow(['Size of Training Set', 'Accuracy', 'Number of Internal Nodes'])
 
-    for length in range(10, 201):
-        sum_percents = 0
-        sum_nodes = 0
-        # length = num*10
-        for repeat in range(1):
-            node_count = 1
-            num_correct = 0
-            num_incorrect = 0
-            head_list[length], test_set = run_trees(DS, length)
-            test_set.update(qs)
-            # print(len(test_set), length, len(test_set) + length) #always equal 435
-            test_reps = list(test_set.keys())
-            for rep in range(len(test_reps)):
-                if correct_guess(test_reps[rep], head_list[length]):
-                    num_correct += 1
-                else:
-                    num_incorrect += 1
-
-            sum_percents += num_correct/(num_correct+num_incorrect)*100
-            sum_nodes += node_count
-        print(length, round(sum_percents/100, 2), sum_nodes/100)
-        csvwriter.writerow([str(length), str(round(sum_percents/100, 2)), str(sum_nodes/100)])
+    # for length in range(10, 201):
+    length = 100
+    sum_percents = 0
+    sum_nodes = 0
+    # length = num*10
+    for repeat in range(1):
+        node_count = 1
+        num_correct = 0
+        num_incorrect = 0
+        head_list[length], test_set = run_trees(DS, length)
+        test_set.update(qs)
+        #print(len(test_set), length, len(test_set) + length) #always equal 435
+        test_reps = list(test_set.keys())
+        for rep in range(len(test_reps)):
+            if correct_guess(test_reps[rep], head_list[length]):
+                num_correct += 1
+            else:
+                num_incorrect += 1
+        sum_percents += num_correct/(num_correct+num_incorrect)*100
+        sum_nodes += node_count
+    print(length, round(sum_percents/100, 2), sum_nodes/100)
+    csvwriter.writerow([str(length), str(round(sum_percents/100, 2)), str(sum_nodes/100)])
 
 
     # print("repid", test_reps[0])
