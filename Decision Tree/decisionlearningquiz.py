@@ -5,22 +5,59 @@ from random import shuffle
 
 CLASS_idx = 0 # index of the answer column after reading CSV file
 node_count = 0
-def get_data(file):
+errors = set()
+error_count = 0
+# def get_data(file):
+#     global CLASS_idx
+#     with open(file) as csvfile:
+#         """ Read data in from a csv file
+#             stores the index of the classification column
+#             in a global variable
+#         """
+#         ds = {}
+#         test = {}
+#         reader = csv.reader(csvfile)
+#         headers = next(reader)[1:]
+#         for row in reader:
+#             if "?" not in set(row):
+#                 ds[row[0]] = row[1:]
+#             elif "?" in set(row):
+#                 test[row[0]] = row[1:]
+#         # ds = {row[0]: row[1:] for row in reader if "?" not in set(row)}
+#         # test = {row[0]: row[1:] for row in reader if "?" in set(row)}
+#         csvfile.close()
+#     CLASS_idx = len(headers) - 1
+#     return ds, test, headers
+
+def get_data(train, test):
     global CLASS_idx
-    with open(file) as csvfile:
+    global errors
+    with open(train) as csvfile:
         """ Read data in from a csv file
             stores the index of the classification column
             in a global variable
         """
         ds = {}
+
+        reader = csv.reader(csvfile)
+        headers = next(reader)[1:]
+        for row in reader:
+            ds[row[0]] = row[1:]
+        # ds = {row[0]: row[1:] for row in reader if "?" not in set(row)}
+        # test = {row[0]: row[1:] for row in reader if "?" in set(row)}
+        csvfile.close()
+    with open(test) as csvfile:
+        """ Read data in from a csv file
+            stores the index of the classification column
+            in a global variable
+        """
         test = {}
         reader = csv.reader(csvfile)
         headers = next(reader)[1:]
         for row in reader:
-            if "?" not in set(row):
-                ds[row[0]] = row[1:]
-            elif "?" in set(row):
-                test[row[0]] = row[1:]
+            if "?" in set(row):
+                errors.add(row[0])
+            test[row[0]] = row[1:]
         # ds = {row[0]: row[1:] for row in reader if "?" not in set(row)}
         # test = {row[0]: row[1:] for row in reader if "?" in set(row)}
         csvfile.close()
@@ -97,10 +134,12 @@ def make_tree(ds, level, head):
         if freq_entropy(freqs) < 0.001: # leaf
             print("---" * level + ">", headers[p], "=", v, freqs)
             # print("---" * level + ">", v, freqs)
-            if v == 'y':
-                head.yes = Node(list(freqs.keys())[0])
-            if v == 'n':
-                head.no = Node(list(freqs.keys())[0])
+            if v == 'Sometimes':
+                head.sometimes = Node(list(freqs.keys())[0])
+            if v == 'Always':
+                head.always = Node(list(freqs.keys())[0])
+            if v == 'Never':
+                head.never = Node(list(freqs.keys())[0])
         ############################ PRUNING #############################
         # elif freq_entropy(freqs) < .15: # low entropy
         #     #chose value with higher freq and make that heads value
@@ -122,10 +161,12 @@ def make_tree(ds, level, head):
 
             print("---" * level + ">", headers[p], "=", v, "...", freqs)
             # print("---" * level + ">", v, freqs)
-            if v == 'y':
-                head.yes = make_tree(new_ds, level + 1, head.yes)
-            if v == 'n':
-                head.no = make_tree(new_ds, level + 1, head.no)
+            if v == 'Sometimes':
+                head.sometimes = make_tree(new_ds, level + 1, head.sometimes)
+            if v == 'Always':
+                head.always = make_tree(new_ds, level + 1, head.always)
+            if v == 'Never':
+                head.never = make_tree(new_ds, level + 1, head.never)
     return head
 
 def choose_reps(dictionary, amount):
@@ -156,29 +197,37 @@ def run_trees(data, size):
     return head, test_set
 
 def question_guess(repid, head):
-    guess_party(repid, head.yes) == guess_party(repid, head.no)
-    if guess_party(repid, head.yes) == guess_party(repid, head.no):
-        return guess_party(repid, head.yes)
+    # guess_party(repid, head.yes) == guess_party(repid, head.no)
+    if guess_party(repid, head.sometimes) == guess_party(repid, head.always) == guess_party(repid, head.never):
+        return guess_party(repid, head.sometimes)
     else: #werent equal
-        if random.randint(0, 1) == 0:
-            return guess_party(repid, head.yes)
+        if random.randint(0, 2) == 0:
+            return guess_party(repid, head.always)
         else:
-            return guess_party(repid, head.no)
+            return guess_party(repid, head.never)
 
 def guess_party(repid, head):
     """ guesses the party of representative at 'repid'
         based on decision tree with head 'head', recursive
     """
-    if head.value == "democrat" or head.value == "republican":
+    if head.value == "True" or head.value == "False":
+        # print("leaf")
         return head.value
     else:
         # print("vote", test_set[repid][head.value-1])
-        if test_set[repid][head.value-1] == 'y':
-            return guess_party(repid, head.yes)
-        elif test_set[repid][head.value-1]== '?':
-            return question_guess(repid, head)
+        if test_set[repid][head.value] == 'Sometimes':
+            # print("here1")
+            return guess_party(repid, head.sometimes)
+        elif test_set[repid][head.value] == 'Always':
+            # print("here2")
+            return guess_party(repid, head.always)
+        elif test_set[repid][head.value] == '?':
+            # print("here3")
+            return "hello"
+            # return question_guess(repid, head)
         else:
-            return guess_party(repid, head.no)
+            # print("here4")
+            return guess_party(repid, head.never)
 
 def actual_party(repid):
     """ returns party of representative at 'repid'
@@ -190,6 +239,7 @@ def actual_party(repid):
     #         has_question = True
 
     # if not has_question:
+    # print("actual", repid, test_set[repid][len(test_set[repid])-1])
     return(test_set[repid][len(test_set[repid])-1])
     # else:
     #     return "question"
@@ -198,7 +248,17 @@ def correct_guess(repid, head):
     """ returns true if decision tree at 'head' correctly
         guesses party of representative at 'repid'
     """
-    return guess_party(repid, head)==actual_party(repid)
+    # print("guess", repid, guess_party(repid, head))
+    global error_count
+
+    if not guess_party(repid, head)==actual_party(repid):
+        if repid in errors:
+            error_count+=1
+            print(error_count)
+    if guess_party(repid, head)=="hello":
+        return False
+    else:
+        return guess_party(repid, head)==actual_party(repid)
 
 class Node:
     """ Node class to store decision tree,
@@ -208,8 +268,9 @@ class Node:
     """
     def __init__(self, value="blank"):
         self.value = value
-        self.no = None
-        self.yes = None
+        self.sometimes = None
+        self.always = None
+        self.never = None
         self.parent = None
 
 def most_frequent(frequencies):
@@ -244,35 +305,38 @@ def prune(freqs):
         #     # print(list(freqs.keys())[0])
         #     head.no = Node(greater)
         ##################################################################
-DS, qs, headers = get_data("house-votes-84.csv")
+# DS, qs, headers = get_data("house-votes-84.csv")
+DS, qs, headers = get_data("quizD_train.csv", "quizD_test_a.csv")
+# DS, qs, headers = get_data("quizD_train.csv", "quizD_train.csv")
+
 head_list = {}
 print("len", "percent", "nodes")
 with open('unprunedoutput.csv', 'w', newline='') as csvfile:
     csvwriter = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
     csvwriter.writerow(['Size of Training Set', 'Accuracy', 'Number of Internal Nodes'])
-
-    for length in range(10, 201):
-        sum_percents = 0
-        sum_nodes = 0
-        # length = num*10
-        for repeat in range(100):
-            node_count = 1
-            num_correct = 0
-            num_incorrect = 0
-            head_list[length], test_set = run_trees(DS, length)
-            test_set.update(qs)
-            # print(len(test_set), length, len(test_set) + length) #always equal 435
-            test_reps = list(test_set.keys())
-            for rep in range(len(test_reps)):
-                if correct_guess(test_reps[rep], head_list[length]):
-                    num_correct += 1
-                else:
-                    num_incorrect += 1
-
-            sum_percents += num_correct/(num_correct+num_incorrect)*100
-            sum_nodes += node_count
-        print(length, round(sum_percents/100, 2), sum_nodes/100)
-        csvwriter.writerow([str(length), str(round(sum_percents/100, 2)), str(sum_nodes/100)])
+    # for length in range(10, 201):
+    length = 1000
+    sum_percents = 0
+    sum_nodes = 0
+    # length = num*10
+    for repeat in range(1):
+        node_count = 1
+        num_correct = 0
+        num_incorrect = 0
+        head_list[length], test_set = run_trees(DS, length)
+        test_set.update(qs)
+        #print(len(test_set), length, len(test_set) + length) #always equal 435
+        test_reps = list(test_set.keys())
+        for rep in range(len(test_reps)):
+            if correct_guess(test_reps[rep], head_list[length]):
+                num_correct += 1
+            else:
+                num_incorrect += 1
+        print(num_correct, num_incorrect)
+        sum_percents += num_correct/(num_correct+num_incorrect)*100
+        sum_nodes += node_count
+    print(length, sum_percents/100, sum_nodes/100)
+    csvwriter.writerow([str(length), str(sum_percents/100), str(sum_nodes/100)])
 
 
     # print("repid", test_reps[0])

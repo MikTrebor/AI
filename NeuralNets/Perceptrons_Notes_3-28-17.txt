@@ -1,0 +1,33 @@
+Perceptrons:
+
+Inputs: Numerical Vectors
+Outputs: 1 or 0
+
+Classifiers
+Linear Classifier:
+Find straight line to separate two groups:
+-Able to tell which group a data point is in
+
+-Not all data is linearly separable
+    -Perceptrons do poorly on this kind of data
+
+f = w1X + w2Y + w3 (vector)
+
+w3 = Constant coeffficient/offset/bias
+
+Output = threshold- if positive, return 1, if negative return 0
+
+Pseudocode:
+Inputs: d features, N targets (class labels), learning rate n
+Outputs: a set of learned weights
+
+Initialize each w_j (e.g. to a small random value)
+
+while (termination condition not satisified)
+    for i = 1: N
+        for j = 0: d
+            deltaw = n( t(i) - f(i) )x_j(i)
+            w_i = w_j + deltaw
+        end
+    calculate termination condition
+    end
