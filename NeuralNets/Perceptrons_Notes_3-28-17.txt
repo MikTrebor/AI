@@ -31,3 +31,13 @@ while (termination condition not satisified)
         end
     calculate termination condition
     end
+
+Training Data:
++-------+-------+-------+
+|   A   |   B   | f(A,B)|
++-------+-------+-------+
+|   0   |   0   |   1   |
+|   0   |   1   |   1   |
+|   1   |   0   |   0   |
+|   1   |   1   |   0   |
++-------+-------+-------+

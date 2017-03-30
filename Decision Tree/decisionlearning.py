@@ -88,14 +88,14 @@ def make_tree(ds, level, head):
     initial_h = freq_entropy(freq_dist(ds))
     best = max((initial_h - parameter_entropy(ds, i), i) for i in range(CLASS_idx))
     p = best[1]
-    print("---" * level, headers[p], "(initial = %3.3f, gain=%3.3f)"%(initial_h, best[0]), "?")
+    # print("---" * level, headers[p], "(initial = %3.3f, gain=%3.3f)"%(initial_h, best[0]), "?")
     head = Node(int(headers[p][1:]))
     #print("---" * level, headers[p], "?")
     for v in val_set(ds, p):
         new_ds = restrict(ds, p, v)
         freqs = freq_dist(new_ds)
         if freq_entropy(freqs) < 0.001: # leaf
-            print("---" * level + ">", headers[p], "=", v, freqs)
+            # print("---" * level + ">", headers[p], "=", v, freqs)
             # print("---" * level + ">", v, freqs)
             if v == 'y':
                 head.yes = Node(list(freqs.keys())[0])
@@ -120,7 +120,7 @@ def make_tree(ds, level, head):
         else: # more children
             node_count+=1
 
-            print("---" * level + ">", headers[p], "=", v, "...", freqs)
+            # print("---" * level + ">", headers[p], "=", v, "...", freqs)
             # print("---" * level + ">", v, freqs)
             if v == 'y':
                 head.yes = make_tree(new_ds, level + 1, head.yes)
@@ -229,6 +229,7 @@ def most_frequent(frequencies):
 
 def prune(freqs):
     highest = most_frequent(freqs)
+    prunedtree =
     # change each node with best leaf, check accuracy and make change if within certain margin of error
         ######## sets yes and no child both to most frequent key #########
         #     #chose value with higher freq and make that heads value
