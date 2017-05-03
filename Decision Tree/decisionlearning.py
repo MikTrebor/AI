@@ -228,8 +228,20 @@ def most_frequent(frequencies):
 
 
 def prune(freqs):
-    highest = most_frequent(freqs)
-    prunedtree =
+    if type(tree.yes) != Node
+            #find highest freq
+            tempc = copy(tree.value)
+            tree.value = highest
+            error (accuracy_check(tree)-initial_accuracy)/initial_accuracy
+            if  error > 0.005 or error < -0.005:
+                tree.value = tempc
+            return tree
+    initial_accuracy = accuracy_check(tree)
+    tree.yes = prune(tree.yes)
+    tree.no = prune(tree.no)
+
+
+
     # change each node with best leaf, check accuracy and make change if within certain margin of error
         ######## sets yes and no child both to most frequent key #########
         #     #chose value with higher freq and make that heads value
